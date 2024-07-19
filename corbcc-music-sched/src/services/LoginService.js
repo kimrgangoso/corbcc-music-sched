@@ -1,14 +1,12 @@
 import axios from 'axios';
 
-const apiClient = axios.create({
-  baseURL: 'https://api.example.com', // Replace with your API base URL 1
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const API_URL = 'http://localhost:8080/api/login';
 
-export const login = (credentials) => {
-  return apiClient.post('/login', credentials); // Replace '/login' with your API login endpoint
+export const loginService = async (credentials) => {
+  try {
+    const response = await axios.post(API_URL, credentials);
+    return response;
+  } catch (error) {
+    throw error; // Propagate the error to be handled by the caller
+  }
 };
-
-export default apiClient;

@@ -1,0 +1,95 @@
+/* src/styles/Dashboard.css */
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #282c34;
+    color: white;
+    position: relative; /* Needed for dropdown positioning */
+    z-index: 1; /* Ensure header is above the dropdown */
+  }
+  
+  .dashboard-header h1 {
+    margin: 0;
+  }
+  
+  .dropdown {
+    position: relative; /* Position relative to place the dropdown menu */
+  }
+  
+  .dropdown-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem; /* Adjust size of the icon */
+    color: white;
+  }
+  
+  .dropdown-button:hover {
+    color: #61dafb; /* Change color on hover */
+  }
+  
+  .dropdown-menu-container {
+    position: absolute;
+    top: 100%; /* Place below the header */
+    right: 0;
+    margin-top: 0.5rem; /* Add margin to prevent overlap */
+    z-index: 1000; /* Ensure it appears above other elements */
+  }
+  
+  .dropdown-menu {
+    background-color: white;
+    color: black;
+    border: 1px solid #ddd;
+    border-radius: 6px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    width: 250px; /* Adjust width as needed */
+    padding: 1rem; /* Add padding inside dropdown */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .welcome-message {
+    margin-bottom: 1rem;
+  }
+  
+  .welcome-text {
+    font-size: 1.1rem; /* Slightly larger text for the welcome message */
+    font-weight: bold;
+    margin: 0;
+  }
+  
+  .date-time {
+    font-size: 0.9rem; /* Smaller text for date and time */
+    color: #555; /* Light grey color for date and time */
+    margin: 0;
+  }
+  
+  .dropdown-item {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .dropdown-item:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .dashboard-content {
+    padding: 2rem;
+  }
+  

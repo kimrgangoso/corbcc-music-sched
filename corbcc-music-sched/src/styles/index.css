@@ -1,0 +1,13 @@
+
+/* Global styles for the whole application */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  /* Additional global styles */
+  h1 {
+    color: #333;
+  }
+  
