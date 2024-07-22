@@ -20,13 +20,22 @@ function LoginPage() {
     try {
       const response = await loginService({ username, password });
       console.log('Login successful:', response.data);
-      // Redirect to dashboard on successful login
+      // Redirect to dashboard with data
       setLoading(false);
-      navigate('/dashboard');
+      navigate('/dashboard', { state: { userData: response.data } });
     } catch (error) {
-      setError('Login failed. Please check your credentials and try again.');
-      console.error('Error logging in:', error);
       setLoading(false);
+      if (error.response) {
+        // Use the error message from the backend response
+        setError(error.response.data || 'Login failed. Please try again later.');
+      } else if (error.request) {
+        // The request was made but no response was received
+        setError('Network error. Please try again later.');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError('Unexpected error. Please try again later.');
+      }
+      console.error('Error logging in:', error);
     }
   };
 

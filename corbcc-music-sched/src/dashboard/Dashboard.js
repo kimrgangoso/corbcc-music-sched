@@ -1,6 +1,5 @@
-// src/dashboard/Dashboard.js
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons'; // Import the user settings icon
 import '../styles/Dashboard.css'; // Import CSS for styling
@@ -8,9 +7,14 @@ import '../styles/Dashboard.css'; // Import CSS for styling
 function Dashboard() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState('');
-  const [username, setUsername] = useState('User'); // Replace with actual username
+  const [username, setUsername] = useState('User'); // Default value
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [profileIdList, setProfileIdList] = useState([]);
+  const [status, setStatus] = useState('');
   const navigate = useNavigate();
-  const dropdownRef = useRef(null); // Create a ref for the dropdown menu
+  const location = useLocation();
+  const dropdownRef = useRef(null); // Define the ref for dropdown
 
   // Handle logout
   const handleLogout = () => {
@@ -39,6 +43,18 @@ function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Get user data from location state
+  useEffect(() => {
+    if (location.state && location.state.userData) {
+      const userData = location.state.userData;
+      setFirstName(userData.firstName);
+      setLastName(userData.lastName);
+      setProfileIdList(userData.profileIdList);
+      setStatus(userData.status);
+      setUsername(userData.username);
+    }
+  }, [location.state]);
+
   // Handle click outside of dropdown menu
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -63,7 +79,7 @@ function Dashboard() {
             <div className="dropdown-menu-container">
               <div className="dropdown-menu">
                 <div className="welcome-message">
-                  <p className="welcome-text">Welcome, {username}</p>
+                  <p className="welcome-text">Welcome, {firstName} {lastName}</p>
                   <p className="date-time">{currentDateTime}</p>
                 </div>
                 <button onClick={handleLogout} className="dropdown-item">Logout</button>
@@ -73,8 +89,10 @@ function Dashboard() {
         </div>
       </header>
       <main className="dashboard-content">
-        {/* Your dashboard content goes here */}
-        <p>Welcome to your dashboard!</p>
+        {/* Displaying user data */}
+        <p>Username: {username}</p>
+        <p>Status: {status}</p>
+        <p>Profile IDs: {profileIdList.join(', ')}</p>
       </main>
     </div>
   );
