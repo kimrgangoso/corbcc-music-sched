@@ -1,25 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserCog } from '@fortawesome/free-solid-svg-icons'; // Import the user settings icon
-import '../styles/Dashboard.css'; // Import CSS for styling
+import { faUserCog } from '@fortawesome/free-solid-svg-icons';
+import { getProfileDetails } from '../../services/ProfileService'; // Import the service function
+import '../../styles/Dashboard.css';
 
 function Dashboard() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState('');
-  const [username, setUsername] = useState('User'); // Default value
+  const [username, setUsername] = useState('User');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [profileIdList, setProfileIdList] = useState([]);
   const [status, setStatus] = useState('');
+  const [hasUserMaintenanceModule, setHasUserMaintenanceModule] = useState(false);
+  const [hasProfileMaintenanceModule, setHasProfileMaintenanceModule] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const dropdownRef = useRef(null); // Define the ref for dropdown
+  const dropdownRef = useRef(null);
 
   // Handle logout
   const handleLogout = () => {
-    // Handle logout logic here (e.g., clearing tokens, etc.)
-    // Redirect to login page after logout
     navigate('/login');
   };
 
@@ -52,6 +53,24 @@ function Dashboard() {
       setProfileIdList(userData.profileIdList);
       setStatus(userData.status);
       setUsername(userData.username);
+
+      // Fetch profile details using the first profile ID in the list
+      if (userData.profileIdList.length > 0) {
+        getProfileDetails(userData.profileIdList[0])
+          .then(data => {
+            const modules = data.module.map(mod => ({
+              moduleName: mod.moduleName,
+              actions: mod.actions
+            }));
+
+            // Check if the user has "User Maintenance" and "Profile Maintenance" modules
+            const hasUserMaintenance = modules.some(mod => mod.moduleName === 'User Maintenance');
+            const hasProfileMaintenance = modules.some(mod => mod.moduleName === 'Profile Maintenance');
+            setHasUserMaintenanceModule(hasUserMaintenance);
+            setHasProfileMaintenanceModule(hasProfileMaintenance);
+          })
+          .catch(error => console.error('Error fetching profile details:', error));
+      }
     }
   }, [location.state]);
 
@@ -82,6 +101,16 @@ function Dashboard() {
                   <p className="welcome-text">Welcome, {firstName} {lastName}</p>
                   <p className="date-time">{currentDateTime}</p>
                 </div>
+                {hasUserMaintenanceModule && (
+                  <button onClick={() => navigate('/usermaintenance')} className="dropdown-item">
+                    User Maintenance
+                  </button>
+                )}
+                {hasProfileMaintenanceModule && (
+                  <button onClick={() => navigate('/profilemaintenance')} className="dropdown-item">
+                    Profile Maintenance
+                  </button>
+                )}
                 <button onClick={handleLogout} className="dropdown-item">Logout</button>
               </div>
             </div>
@@ -89,7 +118,6 @@ function Dashboard() {
         </div>
       </header>
       <main className="dashboard-content">
-        {/* Displaying user data */}
         <p>Username: {username}</p>
         <p>Status: {status}</p>
         <p>Profile IDs: {profileIdList.join(', ')}</p>
