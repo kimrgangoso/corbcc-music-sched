@@ -19,11 +19,11 @@ function LoginPage() {
     try {
       const response = await loginService({ username, password });
       console.log('Login successful:', response.data);
-      // Redirect to dashboard on successful login
+      localStorage.setItem('userData', JSON.stringify(response.data));
       setLoading(false);
-      navigate('/dashboard', { state: { userData: response.data } });
+      navigate('/', { state: { userData: response.data } });
     } catch (error) {
-      NotificationManager.error(error.response.data);
+      NotificationManager.error(error.response?.data || 'Login failed');
       console.error('Error logging in:', error);
       setLoading(false);
     }
